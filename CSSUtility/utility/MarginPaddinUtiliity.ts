@@ -1,19 +1,14 @@
 import { ViewStyle } from "react-native";
-import { parseDynamicValue } from "./DynamicValueParser";
+import { stringToNumber } from "./onlyNumber";
 
 export function handleMarginProperty(
   value: string
 ): ViewStyle["margin"] | undefined {
-  const numericValue = parseDynamicValue(value);
-  if (numericValue !== undefined) {
-    return numericValue;
-  } else {
-    return undefined;
-  }
+  return stringToNumber(value);
 }
 
 export function handlePaddingProperty(
   value: string
 ): ViewStyle["padding"] | undefined {
-  return handleMarginProperty(value);
+  return stringToNumber(value);
 }

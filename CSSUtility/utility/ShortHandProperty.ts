@@ -40,6 +40,10 @@ export function getPropertyFromShorthand(property: string): string | undefined {
       return "maxHeight";
     case "minH":
       return "minHeight";
+    case "d":
+      return "display";
+    case "f":
+      return "flex";
     case "jc":
       return "justifyContent";
     case "ai":
@@ -60,11 +64,11 @@ export function getPropertyFromShorthand(property: string): string | undefined {
       return "backgroundColor";
     case "textColor":
       return "color";
-    case "tA":
+    case "ta":
       return "textAlign";
     case "fw":
       return "fontWeight";
-    case "fS":
+    case "fs":
       return "fontSize";
     case "fStyle":
       return "fontStyle";
@@ -94,25 +98,23 @@ export function getPropertyFromShorthand(property: string): string | undefined {
       return "verticalAlign";
     case "wDirection":
       return "writingDirection";
-    case "m":
-      return "margin";
-    case "backfaceVisibility":
+    case "backface":
       return "backfaceVisibility";
-    case "backgroundColor":
+    case "bgColor":
       return "backgroundColor";
-    case "borderBottomLeftRadius":
+    case "bblRadius":
       return "borderBottomLeftRadius";
-    case "borderBottomRightRadius":
+    case "bbrRadius":
       return "borderBottomRightRadius";
-    case "borderColor":
+    case "borColor":
       return "borderColor";
-    case "borderRadius":
+    case "borRadius":
       return "borderRadius";
-    case "borderTopLeftRadius":
+    case "btlRadius":
       return "borderTopLeftRadius";
-    case "borderTopRightRadius":
+    case "btrRadius":
       return "borderTopRightRadius";
-    case "borderWidth":
+    case "borWidth":
       return "borderWidth";
     case "opacity":
       return "opacity";
@@ -122,10 +124,12 @@ export function getPropertyFromShorthand(property: string): string | undefined {
       return "overlayColor";
     case "resizeMode":
       return "resizeMode";
-    case "objectFit":
+    case "fit":
       return "objectFit";
     case "tintColor":
       return "tintColor";
+    case "zI":
+      return "zIndex";
     default:
       return property;
   }

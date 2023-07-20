@@ -1,3 +1,6 @@
-import { ViewStyle, TextStyle } from "react-native";
+import { ViewStyle, TextStyle, ImageStyle, ViewProps } from "react-native";
 
-export type StyleRules = Record<string, ViewStyle | TextStyle>;
+export type StyleRules = Record<
+  string,
+  ViewStyle | TextStyle | ImageStyle | ViewProps
+>;

@@ -1,8 +1,7 @@
 import CSSUtility from "./CSSUtility/CSSUtility";
+import defaultStyles from "./defaultStyles";
 
 const cssUtil = CSSUtility.getInstance();
-
-import defaultStyles from "./defaultStyles";
 
 Object.entries(defaultStyles).forEach(([className, style]) => {
   cssUtil.addStyle(className, style);

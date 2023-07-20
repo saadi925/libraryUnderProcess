@@ -1,13 +1,5 @@
 import { TextStyle } from "react-native";
-
-export function handleFontSizeProperty(value: string): number | undefined {
-  const numericValue = parseFloat(value);
-  if (!isNaN(numericValue)) {
-    return numericValue;
-  } else {
-    return undefined;
-  }
-}
+import { stringToNumber } from "./onlyNumber";
 
 export function handleFontStyleProperty(
   value: string
@@ -35,5 +27,3 @@ export function handleFontWeightProperty(
     ? (value as TextStyle["fontWeight"])
     : undefined;
 }
-
-// Add more font-related property handlers if needed

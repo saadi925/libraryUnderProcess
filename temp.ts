@@ -1,159 +1,175 @@
-// import { ViewStyle, TextStyle } from "react-native";
-// import { getPropertyFromShorthand, parseDynamicValue } from "./utility";
+import { ViewStyle, TextStyle, ImageStyle } from "react-native";
+import { getPropertyFromShorthand, parseDynamicValue } from "./utility";
+import {
+  handleMarginProperty,
+  handlePaddingProperty,
+  handleFlexProperty,
+  handleTextProperties,
+} from "./utility";
+import { viewStylesHandler } from "./utility/ViewStylesUtils";
+import { handleTextShadowOffset } from "./utility/TextUtils";
 
-// type StyleRules = Record<string, ViewStyle | TextStyle>;
-// type UtilityStyle = ViewStyle | TextStyle;
+type StyleRules = Record<string, ViewStyle | TextStyle | ImageStyle>;
+type UtilityStyle = ViewStyle | TextStyle | ImageStyle;
 
-// class CSSUtility {
-//   private static instance: CSSUtility;
-//   private styles: StyleRules = {};
+class CSSUtility {
+  private static instance: CSSUtility;
+  private styles: StyleRules = {};
+  private styleSet: Set<string> = new Set();
 
-//   private constructor() {}
+  private constructor() {}
 
-//   public static getInstance(): CSSUtility {
-//     if (!CSSUtility.instance) {
-//       CSSUtility.instance = new CSSUtility();
-//     }
-//     return CSSUtility.instance;
-//   }
+  public static getInstance(): CSSUtility {
+    if (!CSSUtility.instance) {
+      CSSUtility.instance = new CSSUtility();
+    }
+    return CSSUtility.instance;
+  }
 
-//   public addStyle(className: string, style: ViewStyle | TextStyle) {
-//     this.styles[className] = style;
-//   }
+  public addStyle(className: string, style: UtilityStyle) {
+    if (!this.styleSet.has(className)) {
+      this.styles[className] = style;
+      this.styleSet.add(className);
+    }
+  }
 
-//   public generateStyles(...classNames: string[]): UtilityStyle {
-//     const generatedStyles: UtilityStyle = {};
+  public generateStyles(...classNames: string[]): UtilityStyle {
+    const generatedStyles: UtilityStyle = {};
 
-//     classNames.forEach((className) => {
-//       const [property, value] = className.split(":");
-//       if (property && value) {
-//         if (property === "position") {
-//           const positionValue: "absolute" | "relative" = value as
-//             | "absolute"
-//             | "relative";
-//           generatedStyles[property] = positionValue;
-//         } else {
-//           const styleProperty = getPropertyFromShorthand(property);
-//           if (styleProperty) {
-//             if (styleProperty === "flex") {
-//               generatedStyles.flex = parseInt(value, 10);
-//             } else if (
-//               styleProperty === "top" ||
-//               styleProperty === "bottom" ||
-//               styleProperty === "left" ||
-//               styleProperty === "right"
-//             ) {
-//               generatedStyles[styleProperty] = parseDynamicValue(value);
-//             } else if (
-//               styleProperty === "width" ||
-//               styleProperty === "height"
-//             ) {
-//               generatedStyles[styleProperty] = parseDynamicValue(value);
-//             } else if (property === "fontSize") {
-//               generatedStyles[property] = parseInt(value, 10);
-//             } else if (
-//               styleProperty === "marginTop" ||
-//               styleProperty === "marginBottom" ||
-//               styleProperty === "marginLeft" ||
-//               styleProperty === "marginRight" ||
-//               styleProperty === "paddingTop" ||
-//               styleProperty === "paddingBottom" ||
-//               styleProperty === "paddingLeft" ||
-//               styleProperty === "paddingRight" ||
-//               styleProperty === "paddingVertical" ||
-//               styleProperty === "paddingHorizontal" ||
-//               styleProperty === "marginVertical" ||
-//               styleProperty === "marginHorizontal"
-//             ) {
-//               generatedStyles[styleProperty] = parseDynamicValue(value);
-//             } else if (styleProperty === "paddingVertical") {
-//               const numericValue = parseDynamicValue(value);
-//               generatedStyles.paddingTop = numericValue;
-//               generatedStyles.paddingBottom = numericValue;
-//             } else if (styleProperty === "paddingHorizontal") {
-//               const numericValue = parseDynamicValue(value);
-//               generatedStyles.paddingLeft = numericValue;
-//               generatedStyles.paddingRight = numericValue;
-//             } else if (styleProperty === "marginVertical") {
-//               const numericValue = parseDynamicValue(value);
-//               generatedStyles.marginTop = numericValue;
-//               generatedStyles.marginBottom = numericValue;
-//             } else if (styleProperty === "marginHorizontal") {
-//               const numericValue = parseDynamicValue(value);
-//               generatedStyles.marginLeft = numericValue;
-//               generatedStyles.marginRight = numericValue;
-//             } else if (styleProperty === "color") {
-//               generatedStyles[styleProperty] = value;
-//             } else if (styleProperty === "fontFamily") {
-//               generatedStyles[styleProperty] = value;
-//             } else if (styleProperty === "fontSize") {
-//               generatedStyles[styleProperty] = parseInt(value, 10);
-//             } else if (styleProperty === "fontStyle") {
-//               generatedStyles[styleProperty] = value as "normal" | "italic";
-//             } else if (styleProperty === "fontWeight") {
-//               generatedStyles[styleProperty] = value;
-//             } else if (styleProperty === "includeFontPadding") {
-//               generatedStyles[styleProperty] = value === "false" ? false : true;
-//             } else if (styleProperty === "fontVariant") {
-//               generatedStyles[styleProperty] = value.split(" ");
-//             } else if (styleProperty === "letterSpacing") {
-//               generatedStyles[styleProperty] = parseFloat(value);
-//             } else if (styleProperty === "lineHeight") {
-//               generatedStyles[styleProperty] = parseFloat(value);
-//             } else if (styleProperty === "textAlign") {
-//               generatedStyles[styleProperty] = value as
-//                 | "auto"
-//                 | "left"
-//                 | "right"
-//                 | "center"
-//                 | "justify";
-//             } else if (styleProperty === "textAlignVertical") {
-//               generatedStyles[styleProperty] = value as
-//                 | "auto"
-//                 | "top"
-//                 | "bottom"
-//                 | "center";
-//             } else if (styleProperty === "textDecorationColor") {
-//               generatedStyles[styleProperty] = value;
-//             } else if (styleProperty === "textDecorationLine") {
-//               generatedStyles[styleProperty] = value;
-//             } else if (styleProperty === "textDecorationStyle") {
-//               generatedStyles[styleProperty] = value;
-//             } else if (styleProperty === "textShadowColor") {
-//               generatedStyles[styleProperty] = value;
-//             } else if (styleProperty === "textShadowOffset") {
-//               generatedStyles[styleProperty] = JSON.parse(value);
-//             } else if (styleProperty === "textShadowRadius") {
-//               generatedStyles[styleProperty] = parseFloat(value);
-//             } else if (styleProperty === "textTransform") {
-//               generatedStyles[styleProperty] = value as
-//                 | "none"
-//                 | "uppercase"
-//                 | "lowercase"
-//                 | "capitalize";
-//             } else if (styleProperty === "verticalAlign") {
-//               generatedStyles[styleProperty] = value as
-//                 | "auto"
-//                 | "top"
-//                 | "bottom"
-//                 | "middle";
-//             } else if (styleProperty === "writingDirection") {
-//               generatedStyles[styleProperty] = value as "auto" | "ltr" | "rtl";
-//             } else {
-//               generatedStyles[styleProperty] = value;
-//             }
-//           }
-//         }
-//       } else {
-//         const style = this.styles[className];
-//         if (style) {
-//           Object.assign(generatedStyles, style);
-//         }
-//       }
-//     });
+    for (const className of classNames) {
+      const [property, value] = className.split(":");
+      if (property && value) {
+        const styleProperty = getPropertyFromShorthand(property);
+        if (!styleProperty) continue;
 
-//     return generatedStyles;
-//   }
-// }
+        switch (styleProperty) {
+            switch (styleProperty) {
+                case "position":
+                  const positionValue: "absolute" | "relative" = value as
+                    | "absolute"
+                    | "relative";
+                  generatedStyles[property] = positionValue;
+                  break;
+      
+                case "margin":
+                case "marginTop":
+                case "marginBottom":
+                case "marginLeft":
+                case "marginRight":
+                case "marginVertical":
+                case "marginHorizontal":
+                  const marginValue = handleMarginProperty(value);
+                  if (marginValue !== undefined) {
+                    generatedStyles[styleProperty] = marginValue;
+                  }
+                  break;
+      
+                case "padding":
+                case "paddingTop":
+                case "paddingBottom":
+                case "paddingLeft":
+                case "paddingRight":
+                case "paddingVertical":
+                case "paddingHorizontal":
+                  const paddingValue = handlePaddingProperty(value);
+                  if (paddingValue !== undefined) {
+                    generatedStyles[styleProperty] = paddingValue;
+                  }
+                  break;
+      
+                case "textShadowOffset":
+                  const textShadowOffsetValue = handleTextShadowOffset(value);
+                  if (textShadowOffsetValue !== undefined) {
+                    generatedStyles[styleProperty] = textShadowOffsetValue;
+                  }
+                  break;
+      
+                case "textAlign":
+                case "fontWeight":
+                case "fontSize":
+                case "fontStyle":
+                case "letterSpacing":
+                case "lineHeight":
+                case "color":
+                case "textDecorationColor":
+                case "textDecorationLine":
+                case "textDecorationStyle":
+                case "textShadowRadius":
+                case "textShadowColor":
+                case "textAlignVertical":
+                case "writingDirection":
+                  const textPropertyValue = handleTextProperties(
+                    styleProperty,
+                    value
+                  );
+                  if (textPropertyValue !== undefined) {
+                    generatedStyles[styleProperty] = textPropertyValue;
+                  }
+                  break;
+      
+                case "width":
+                case "maxWidth":
+                case "minWidth":
+                case "height":
+                case "minHeight":
+                case "maxHeight":
+                  generatedStyles[styleProperty] = parseDynamicValue(value);
+                  break;
+      
+                case "borderWidth":
+                case "borderRadius":
+                case "borderTopLeftRadius":
+                case "borderTopRightRadius":
+                case "borderBottomLeftRadius":
+                case "borderBottomRightRadius":
+                case "opacity":
+                  const numericValue = parseFloat(value);
+                  if (!isNaN(numericValue)) {
+                    generatedStyles[styleProperty] = numericValue;
+                  }
+                  break;
+      
+                case "backfaceVisibility":
+                case "backgroundColor":
+                case "borderColor":
+                case "borderStyle":
+                case "borderWidth":
+                case "elevation":
+                case "opacity":
+                case "pointerEvents":
+                  const viewStyleProperty = viewStylesHandler(styleProperty, value);
+                  if (viewStyleProperty !== undefined) {
+                    generatedStyles[styleProperty] = viewStyleProperty;
+                  }
+                  break;
+      
+                case "flex":
+                case "flexGrow":
+                case "flexShrink":
+                case "rowGap":
+                case "gap":
+                case "columnGap":
+                  const flexValue = handleFlexProperty(value);
+                  if (flexValue !== undefined) {
+                    generatedStyles[styleProperty] = flexValue;
+                  }
+                  break;
+      
+                default:
+                  generatedStyles[styleProperty] = value;
+                  break;
+              }
+        }
+      } else {
+        const style = this.styles[className];
+        if (style) {
+          Object.assign(generatedStyles, style);
+        }
+      }
+    }
 
-// export default CSSUtility;
+    return generatedStyles;
+  }
+}
+
+export default CSSUtility;
